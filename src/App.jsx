@@ -1,0 +1,342 @@
+import { useMemo, useState } from "react";
+
+const asset = (name) => `/assets/${name}`;
+
+const offers = [
+  "Find nearby riders instantly",
+  "Secured payments system",
+  "Real-time delivery tracking",
+  "Instant price negotiation",
+  "Upload item images for confirmation",
+  "Smart rider load management",
+  "Chat with riders in-app",
+  "Get paid per delivery",
+];
+
+const featureCards = [
+  {
+    icon: "▣",
+    title: "Upload item Images for Confirmation",
+    text: "Snap and upload clear photos of your parcel to help us verify its contents before pickup.",
+  },
+  {
+    icon: "●",
+    title: "Chat with Riders In-App",
+    text: "Stay updated and coordinate easily. Message your rider directly from the app.",
+  },
+  {
+    icon: "▰",
+    title: "Get paid per delivery",
+    text: "Get matched with available riders in your area for faster pickups and deliveries.",
+  },
+  {
+    icon: "◎",
+    title: "Find Nearby Riders Instantly",
+    text: "Get matched with available riders in your area for faster pickups and deliveries.",
+  },
+];
+
+const steps = [
+  ["01", "Download the App", "Go to the App Store or Google Play and search for Parcel Pal. Tap install to download."],
+  ["02", "Create Your Account", "Open the app and sign up using your email or phone number. Choose a secure password."],
+  ["03", "Set Your Delivery Preferences", "Add your name, address, preferred delivery options, and location services."],
+  ["04", "Explore the Dashboard", "Browse delivery options, track parcels, or book a pickup from your home screen."],
+  ["05", "Book Your First Delivery", "Enter parcel details, choose a delivery time, and confirm your request."],
+  ["06", "Track in Real Time", "Watch your delivery live and get updates until it arrives safely."],
+];
+
+const testimonials = [
+  ["Jerome Bell", "Parcel Pal has made dispatch easier for my small business."],
+  ["Kristin Watson", "I love the secure payments and how fast the riders respond."],
+  ["Annette Black", "Real-time tracking keeps every order visible from pickup to drop-off."],
+  ["Annette Black", "We run multiple store locations and ParcelPal keeps everything in sync."],
+];
+
+function StoreBadges({ center = false }) {
+  return (
+    <div className={`store-row ${center ? "center" : ""}`} aria-label="Download links">
+      <a href="#download" className="store-badge">
+        Get it on
+        <strong>Google Play</strong>
+      </a>
+      <a href="#download" className="store-badge">
+        Download on the
+        <strong>App Store</strong>
+      </a>
+    </div>
+  );
+}
+
+function Header({ onOpenMenu, onOpenWaitlist, onJoinWaitlist }) {
+  return (
+    <header className="site-header" id="top">
+      <nav className="nav" aria-label="Primary navigation">
+        <a className="brand" href="#top">Parcelpal</a>
+        <div className="nav-actions">
+          <a className="support-link" href="mailto:support@parcelpal.ng">Support</a>
+          <button className="btn btn-primary" onClick={onOpenWaitlist}>Get Started</button>
+          <button className="icon-grid" type="button" onClick={onOpenMenu} aria-label="Open menu">
+            {Array.from({ length: 9 }).map((_, index) => <span key={index} />)}
+          </button>
+        </div>
+      </nav>
+
+      <section className="hero">
+        <div className="hero-media" aria-hidden="true" />
+        <div className="hero-content">
+          <h1>Fast. Secure. Real-Time Delivery, Anytime.</h1>
+          <p>
+            ParcelPal connects you with nearby riders for quick, real-time deliveries
+            with tracking, secure payments, and in-app coordination.
+          </p>
+          <form className="waitlist-inline" onSubmit={onJoinWaitlist}>
+            <label className="sr-only" htmlFor="hero-email">Email address</label>
+            <input id="hero-email" name="email" type="email" placeholder="Join the waiting list" required />
+            <button className="btn btn-primary" type="submit">Join Waitlist</button>
+          </form>
+          <StoreBadges />
+        </div>
+      </section>
+    </header>
+  );
+}
+
+function OfferSection({ onOpenWaitlist }) {
+  return (
+    <section className="section offer-section" id="offer">
+      <div className="section-title">
+        <h2>What we offer</h2>
+      </div>
+      <div className="offer-grid">
+        <div className="offer-media">
+          <img src={asset("Frame 2147227048.png")} alt="Parcelpal rider delivery preview" />
+        </div>
+        <ul className="feature-list" aria-label="Parcelpal features">
+          {offers.map((offer) => <li key={offer}>{offer}</li>)}
+        </ul>
+        {featureCards.map((card) => (
+          <article className="feature-card" key={card.title}>
+            <span className="feature-icon">{card.icon}</span>
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </article>
+        ))}
+      </div>
+      <div className="cta-strip">
+        <p><strong>Ready to deliver smarter?</strong> Join the ParcelPal community.</p>
+        <div>
+          <a className="btn btn-dark" href="#download">Download App</a>
+          <button className="btn btn-outline" onClick={onOpenWaitlist}>Book a Rider</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StepsSection() {
+  return (
+    <section className="section steps-section" id="steps">
+      <h2>Easy Steps to Download and Use the Parcel Pal App</h2>
+      <div className="steps-layout">
+        <div className="phone-frame">
+          <img src={asset("Frame 2147227013-1.png")} alt="Parcelpal app interface" />
+        </div>
+        <ol className="steps-list">
+          {steps.map(([number, title, text], index) => (
+            <li className={index === 1 ? "active" : ""} key={number}>
+              <span>{number}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const [offset, setOffset] = useState(0);
+  const visibleCards = useMemo(() => {
+    return testimonials.map((_, index) => testimonials[(index + offset + testimonials.length) % testimonials.length]);
+  }, [offset]);
+
+  return (
+    <section className="testimonials" aria-label="Customer testimonials">
+      <div className="testimonial-track">
+        {visibleCards.map(([name, text], index) => (
+          <article className="testimonial-card" key={`${name}-${index}`}>
+            <strong>{name}</strong>
+            <p>{text}</p>
+            <span>★★★★★</span>
+          </article>
+        ))}
+      </div>
+      <div className="slider-controls">
+        <button type="button" onClick={() => setOffset((value) => value - 1)} aria-label="Previous testimonial">←</button>
+        <button type="button" onClick={() => setOffset((value) => value + 1)} aria-label="Next testimonial">→</button>
+      </div>
+    </section>
+  );
+}
+
+function MenuOverlay({ open, onClose, onOpenWaitlist }) {
+  if (!open) return null;
+
+  const closeAfterClick = () => onClose();
+
+  return (
+    <div className="menu-overlay">
+      <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Parcelpal menu">
+        <div className="menu-top">
+          <a className="brand" href="#top" onClick={closeAfterClick}>Parcelpal</a>
+          <div>
+            <a className="support-link desktop-only" href="mailto:support@parcelpal.ng">Support</a>
+            <button className="btn btn-primary desktop-only" onClick={onOpenWaitlist}>Get Started</button>
+            <button className="close-btn" type="button" onClick={onClose} aria-label="Close menu">×</button>
+          </div>
+        </div>
+        <div className="menu-content">
+          <nav className="menu-links" aria-label="Menu links">
+            <a href="#top" onClick={closeAfterClick}>Home</a>
+            <a href="#offer" onClick={closeAfterClick}>About Parcel pal</a>
+            <a href="mailto:support@parcelpal.ng">Contact us</a>
+            <a href="#download" onClick={closeAfterClick}>FAQ</a>
+            <a href="#download" onClick={closeAfterClick}>Terms & Conditions</a>
+            <a href="#download" onClick={closeAfterClick}>Privacy Policy</a>
+          </nav>
+          <div className="menu-badges"><StoreBadges /></div>
+          <div className="menu-options">
+            <article><span>♟</span><div><h3>Join Parcel pal today</h3><p>Join the Parcel Pal community and experience seamless delivery management across Nigeria.</p></div></article>
+            <article><span>▰</span><div><h3>Become a Parcel Pal driver</h3><p>Unlock your earning potential with Parcel Pal and grow with Nigeria’s trusted delivery platform.</p></div></article>
+            <article><span>■</span><div><h3>Smart Business Accounts for Bulk Deliveries</h3><p>Simplify your logistics with business accounts for bulk delivery, tracking, and seamless payments.</p></div></article>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WaitlistModal({ open, onClose, onSubmit, message }) {
+  if (!open) return null;
+
+  return (
+    <div className="waitlist-modal">
+      <div className="waitlist-card" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+        <button className="close-btn" type="button" onClick={onClose} aria-label="Close waitlist">×</button>
+        <div className="waitlist-hero">
+          <img src={asset("Frame 2147227049.png")} alt="" />
+          <h2 id="waitlist-title">Parcelpal</h2>
+        </div>
+        <form className="waitlist-form" onSubmit={onSubmit}>
+          <h3>Join the waiting list</h3>
+          <p>Tell us how you want to use Parcelpal and we’ll notify you when early access opens.</p>
+          <label>
+            Full name
+            <input name="name" type="text" placeholder="Your name" required />
+          </label>
+          <label>
+            Email address
+            <input name="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label>
+            I am joining as
+            <select name="role" required defaultValue="">
+              <option value="" disabled>Select one</option>
+              <option>Individual</option>
+              <option>Business Owner</option>
+              <option>Rider/Driver</option>
+            </select>
+          </label>
+          <button className="btn btn-primary" type="submit">Join Waitlist</button>
+          <p className="form-message">{message}</p>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [formMessage, setFormMessage] = useState("");
+
+  const saveWaitlistEntry = (entry) => {
+    const current = JSON.parse(localStorage.getItem("parcelpalWaitlist") || "[]");
+    localStorage.setItem("parcelpalWaitlist", JSON.stringify([...current, entry]));
+  };
+
+  const handleWaitlistSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const entry = {
+      name: formData.get("name") || "",
+      email: formData.get("email"),
+      role: formData.get("role") || "Early access",
+      joinedAt: new Date().toISOString(),
+    };
+
+    saveWaitlistEntry(entry);
+    event.currentTarget.reset();
+    setFormMessage("You are on the list. We’ll be in touch soon.");
+    setWaitlistOpen(true);
+  };
+
+  const openWaitlist = () => {
+    setFormMessage("");
+    setWaitlistOpen(true);
+    setMenuOpen(false);
+  };
+
+  return (
+    <>
+      <Header
+        onOpenMenu={() => setMenuOpen(true)}
+        onOpenWaitlist={openWaitlist}
+        onJoinWaitlist={handleWaitlistSubmit}
+      />
+      <main>
+        <OfferSection onOpenWaitlist={openWaitlist} />
+        <StepsSection />
+        <Testimonials />
+        <section className="download-card" id="download">
+          <h2>Download Our App Today!</h2>
+          <p>Get trusted local riders, live tracking, secure checkout, and stress-free deliveries from one smart app.</p>
+          <StoreBadges center />
+          <button className="btn btn-primary" onClick={openWaitlist}>Join Waiting List</button>
+        </section>
+      </main>
+      <footer className="footer">
+        <div>
+          <p className="footer-label">About</p>
+          <h2>Parcel pal</h2>
+          <p>Parcel Pal delivers fast, secure, and affordable courier services across Nigeria.</p>
+        </div>
+        <div>
+          <p className="footer-label">Parcel Pal</p>
+          <a href="#offer">Join Parcel pal today</a>
+          <a href="#top">About us</a>
+          <a href="mailto:support@parcelpal.ng">Contact us</a>
+          <a href="#download">Terms and Conditions</a>
+          <a href="#download">Privacy policy</a>
+        </div>
+        <div>
+          <p className="footer-label">Contact</p>
+          <p>Email: support@parcelpal.ng</p>
+          <p>Tel- Phone: xxxxxxxxx</p>
+          <p>Location: Lagos, Nigeria</p>
+        </div>
+        <small>© 2024 Parcel Pal. All rights reserved.</small>
+      </footer>
+      <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenWaitlist={openWaitlist} />
+      <WaitlistModal
+        open={waitlistOpen}
+        onClose={() => setWaitlistOpen(false)}
+        onSubmit={handleWaitlistSubmit}
+        message={formMessage}
+      />
+    </>
+  );
+}

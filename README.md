@@ -1,2 +1,2 @@
 # movva_landing
-Admin page for The Movva App
+Landing page for our product
