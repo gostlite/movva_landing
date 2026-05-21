@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 const asset = (name) => `/assets/${name}`;
 
@@ -52,28 +52,81 @@ const testimonials = [
   ["Annette Black", "We run multiple store locations and ParcelPal keeps everything in sync."],
 ];
 
+const iconFiles = {
+  googlePlay: "google-play-badge.png",
+  appStore: "app-store-badge.png",
+  upload: "upload-camera-icon.png",
+  location: "location-pin-icon.png",
+  avatar: "testimonial-avatar.png",
+  phoneSteps: "phone-steps.png",
+};
+
+const socialLinks = [
+  ["facebook-color-svgrepo-com 1.png", "Facebook"],
+  ["linkedin-color-svgrepo-com 1.png", "LinkedIn"],
+  ["youtube-color-svgrepo-com 1.png", "YouTube"],
+  ["gmail-icon-logo-svgrepo-com 1.png", "Email"],
+  ["x_twitter.png", "X"],
+];
+
+function AssetImage({ src, alt, className, fallback }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src) return fallback ?? null;
+  if (failed) return fallback ?? null;
+
+  return (
+    <img
+      className={className}
+      src={asset(src)}
+      alt={alt}
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 function StoreBadges({ center = false }) {
   return (
     <div className={`store-row ${center ? "center" : ""}`} aria-label="Download links">
-      <a href="#download" className="store-badge">
-        Get it on
-        <strong>Google Play</strong>
+      <a href="#download" className="store-link" aria-label="Get it on Google Play">
+        <AssetImage
+          src={iconFiles.googlePlay}
+          alt="Get it on Google Play"
+          className="store-image"
+          fallback={<span className="store-badge">Get it on<strong>Google Play</strong></span>}
+        />
       </a>
-      <a href="#download" className="store-badge">
-        Download on the
-        <strong>App Store</strong>
+      <a href="#download" className="store-link" aria-label="Download on the App Store">
+        <AssetImage
+          src={iconFiles.appStore}
+          alt="Download on the App Store"
+          className="store-image"
+          fallback={<span className="store-badge">Download on the<strong>App Store</strong></span>}
+        />
       </a>
     </div>
   );
 }
 
-function Header({ onOpenMenu, onOpenWaitlist, onJoinWaitlist }) {
+function SocialLinks() {
+  return (
+    <div className="social-links" aria-label="Social links">
+      {socialLinks.map(([file, label]) => (
+        <a href="#support" aria-label={label} key={label}>
+          <AssetImage src={file} alt="" className="social-icon" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function Header({ onOpenMenu, onOpenWaitlist }) {
   return (
     <header className="site-header" id="top">
       <nav className="nav" aria-label="Primary navigation">
         <a className="brand" href="#top">Parcelpal</a>
         <div className="nav-actions">
-          <a className="support-link" href="mailto:support@parcelpal.ng">Support</a>
+          <a className="support-link" href="#support">Support</a>
           <button className="btn btn-primary" onClick={onOpenWaitlist}>Get Started</button>
           <button className="icon-grid" type="button" onClick={onOpenMenu} aria-label="Open menu">
             {Array.from({ length: 9 }).map((_, index) => <span key={index} />)}
@@ -82,19 +135,32 @@ function Header({ onOpenMenu, onOpenWaitlist, onJoinWaitlist }) {
       </nav>
 
       <section className="hero">
-        <div className="hero-media" aria-hidden="true" />
         <div className="hero-content">
-          <h1>Fast. Secure. Real-Time Delivery, Anytime.</h1>
-          <p>
-            ParcelPal connects you with nearby riders for quick, real-time deliveries
-            with tracking, secure payments, and in-app coordination.
-          </p>
-          <form className="waitlist-inline" onSubmit={onJoinWaitlist}>
-            <label className="sr-only" htmlFor="hero-email">Email address</label>
-            <input id="hero-email" name="email" type="email" placeholder="Join the waiting list" required />
-            <button className="btn btn-primary" type="submit">Join Waitlist</button>
-          </form>
-          <StoreBadges />
+          <div className="hero-copy">
+            <span className="hero-pill">Real-time delivery across Nigeria</span>
+            <h1>Fast. Secure. Real-Time Delivery, Anytime.</h1>
+            <p>
+              ParcelPal connects you with nearby riders for quick, real-time deliveries
+              with tracking, secure payments, and in-app coordination.
+            </p>
+            <div className="waitlist-inline">
+              <label className="sr-only" htmlFor="hero-email">Email address</label>
+              <input
+                id="hero-email"
+                name="email"
+                type="email"
+                placeholder="Join the waiting list"
+                readOnly
+                onFocus={onOpenWaitlist}
+                onClick={onOpenWaitlist}
+              />
+              <button className="btn btn-primary" type="button" onClick={onOpenWaitlist}>Join Waitlist</button>
+            </div>
+            <StoreBadges />
+          </div>
+          <div className="hero-visual" aria-hidden="true">
+            <img src={asset("Frame 2147227049.png")} alt="" />
+          </div>
         </div>
       </section>
     </header>
@@ -116,7 +182,11 @@ function OfferSection({ onOpenWaitlist }) {
         </ul>
         {featureCards.map((card) => (
           <article className="feature-card" key={card.title}>
-            <span className="feature-icon">{card.icon}</span>
+            <AssetImage
+              src={card.title.includes("Upload") ? iconFiles.upload : card.title.includes("Nearby") ? iconFiles.location : ""}
+              alt=""
+              className="feature-image-icon"
+            />
             <h3>{card.title}</h3>
             <p>{card.text}</p>
           </article>
@@ -139,7 +209,11 @@ function StepsSection() {
       <h2>Easy Steps to Download and Use the Parcel Pal App</h2>
       <div className="steps-layout">
         <div className="phone-frame">
-          <img src={asset("Frame 2147227013-1.png")} alt="Parcelpal app interface" />
+          <AssetImage
+            src={iconFiles.phoneSteps}
+            alt="Parcelpal app interface"
+            fallback={<img src={asset("Frame 2147227013-1.png")} alt="Parcelpal app interface" />}
+          />
         </div>
         <ol className="steps-list">
           {steps.map(([number, title, text], index) => (
@@ -168,6 +242,7 @@ function Testimonials() {
       <div className="testimonial-track">
         {visibleCards.map(([name, text], index) => (
           <article className="testimonial-card" key={`${name}-${index}`}>
+            <AssetImage src={iconFiles.avatar} alt="" className="testimonial-avatar" />
             <strong>{name}</strong>
             <p>{text}</p>
             <span>★★★★★</span>
@@ -193,7 +268,7 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
         <div className="menu-top">
           <a className="brand" href="#top" onClick={closeAfterClick}>Parcelpal</a>
           <div>
-            <a className="support-link desktop-only" href="mailto:support@parcelpal.ng">Support</a>
+            <a className="support-link desktop-only" href="#support" onClick={closeAfterClick}>Support</a>
             <button className="btn btn-primary desktop-only" onClick={onOpenWaitlist}>Get Started</button>
             <button className="close-btn" type="button" onClick={onClose} aria-label="Close menu">×</button>
           </div>
@@ -202,16 +277,16 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
           <nav className="menu-links" aria-label="Menu links">
             <a href="#top" onClick={closeAfterClick}>Home</a>
             <a href="#offer" onClick={closeAfterClick}>About Parcel pal</a>
-            <a href="mailto:support@parcelpal.ng">Contact us</a>
+            <a href="#support" onClick={closeAfterClick}>Contact us</a>
             <a href="#download" onClick={closeAfterClick}>FAQ</a>
             <a href="#download" onClick={closeAfterClick}>Terms & Conditions</a>
             <a href="#download" onClick={closeAfterClick}>Privacy Policy</a>
           </nav>
           <div className="menu-badges"><StoreBadges /></div>
           <div className="menu-options">
-            <article><span>♟</span><div><h3>Join Parcel pal today</h3><p>Join the Parcel Pal community and experience seamless delivery management across Nigeria.</p></div></article>
-            <article><span>▰</span><div><h3>Become a Parcel Pal driver</h3><p>Unlock your earning potential with Parcel Pal and grow with Nigeria’s trusted delivery platform.</p></div></article>
-            <article><span>■</span><div><h3>Smart Business Accounts for Bulk Deliveries</h3><p>Simplify your logistics with business accounts for bulk delivery, tracking, and seamless payments.</p></div></article>
+            <article><div><h3>Join Parcel pal today</h3><p>Join the Parcel Pal community and experience seamless delivery management across Nigeria.</p></div></article>
+            <article><div><h3>Become a Parcel Pal driver</h3><p>Unlock your earning potential with Parcel Pal and grow with Nigeria’s trusted delivery platform.</p></div></article>
+            <article><div><h3>Smart Business Accounts for Bulk Deliveries</h3><p>Simplify your logistics with business accounts for bulk delivery, tracking, and seamless payments.</p></div></article>
           </div>
         </div>
       </div>
@@ -228,10 +303,9 @@ function WaitlistModal({ open, onClose, onSubmit, message }) {
         <button className="close-btn" type="button" onClick={onClose} aria-label="Close waitlist">×</button>
         <div className="waitlist-hero">
           <img src={asset("Frame 2147227049.png")} alt="" />
-          <h2 id="waitlist-title">Parcelpal</h2>
         </div>
         <form className="waitlist-form" onSubmit={onSubmit}>
-          <h3>Join the waiting list</h3>
+          <h3 id="waitlist-title">Join the waiting list</h3>
           <p>Tell us how you want to use Parcelpal and we’ll notify you when early access opens.</p>
           <label>
             Full name
@@ -262,6 +336,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [formMessage, setFormMessage] = useState("");
+  const currentYear = new Date().getFullYear();
 
   const saveWaitlistEntry = (entry) => {
     const current = JSON.parse(localStorage.getItem("parcelpalWaitlist") || "[]");
@@ -295,7 +370,6 @@ export default function App() {
       <Header
         onOpenMenu={() => setMenuOpen(true)}
         onOpenWaitlist={openWaitlist}
-        onJoinWaitlist={handleWaitlistSubmit}
       />
       <main>
         <OfferSection onOpenWaitlist={openWaitlist} />
@@ -308,17 +382,18 @@ export default function App() {
           <button className="btn btn-primary" onClick={openWaitlist}>Join Waiting List</button>
         </section>
       </main>
-      <footer className="footer">
+      <footer className="footer" id="support">
         <div>
           <p className="footer-label">About</p>
           <h2>Parcel pal</h2>
           <p>Parcel Pal delivers fast, secure, and affordable courier services across Nigeria.</p>
+          <SocialLinks />
         </div>
         <div>
           <p className="footer-label">Parcel Pal</p>
           <a href="#offer">Join Parcel pal today</a>
           <a href="#top">About us</a>
-          <a href="mailto:support@parcelpal.ng">Contact us</a>
+          <a href="#support">Contact us</a>
           <a href="#download">Terms and Conditions</a>
           <a href="#download">Privacy policy</a>
         </div>
@@ -328,7 +403,7 @@ export default function App() {
           <p>Tel- Phone: xxxxxxxxx</p>
           <p>Location: Lagos, Nigeria</p>
         </div>
-        <small>© 2024 Parcel Pal. All rights reserved.</small>
+        <small>© {currentYear} Parcel Pal. All rights reserved.</small>
       </footer>
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenWaitlist={openWaitlist} />
       <WaitlistModal
