@@ -319,11 +319,11 @@ function WaitlistModal({ open, onClose, onSubmit, message, messageType, isSubmit
           </label>
           <label>
             I am joining as
-            <select name="role" required defaultValue="">
+            <select name="userType" required defaultValue="">
               <option value="" disabled>Select one</option>
-              <option>Individual</option>
-              <option>Business Owner</option>
-              <option>Rider/Driver</option>
+              <option value="user">Individual</option>
+              <option value="business">Business Owner</option>
+              <option value="rider">Rider/Driver</option>
             </select>
           </label>
           <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
@@ -356,10 +356,9 @@ export default function App() {
     const form = event.currentTarget;
     const formData = new FormData(event.currentTarget);
     const entry = {
-      name: formData.get("name") || "",
-      email: formData.get("email"),
-      role: formData.get("role") || "Early access",
-      joinedAt: new Date().toISOString(),
+      name: String(formData.get("name") || ""),
+      email: String(formData.get("email") || ""),
+      userType: String(formData.get("userType") || ""),
     };
 
     if (!waitlistEndpoint) {
