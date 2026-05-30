@@ -39,7 +39,7 @@ const featureCards = [
 ];
 
 const steps = [
-  ["01", "Download the App", "Go to the App Store or Google Play and search for Parcel Pal. Tap install to download."],
+  ["01", "Download the App", "Go to the App Store or Google Play and search for Movva. Tap install to download."],
   ["02", "Create Your Account", "Open the app and sign up using your email or phone number. Choose a secure password."],
   ["03", "Set Your Delivery Preferences", "Add your name, address, preferred delivery options, and location services."],
   ["04", "Explore the Dashboard", "Browse delivery options, track parcels, or book a pickup from your home screen."],
@@ -48,10 +48,10 @@ const steps = [
 ];
 
 const testimonials = [
-  ["Jerome Bell", "Parcel Pal has made dispatch easier for my small business."],
+  ["Jerome Bell", "Movva has made dispatch easier for my small business."],
   ["Kristin Watson", "I love the secure payments and how fast the riders respond."],
   ["Annette Black", "Real-time tracking keeps every order visible from pickup to drop-off."],
-  ["Annette Black", "We run multiple store locations and ParcelPal keeps everything in sync."],
+  ["Annette Black", "We run multiple store locations and Movva keeps everything in sync."],
 ];
 
 const iconFiles = {
@@ -126,7 +126,7 @@ function Header({ onOpenMenu, onOpenWaitlist }) {
   return (
     <header className="site-header" id="top">
       <nav className="nav" aria-label="Primary navigation">
-        <a className="brand" href="#top">Parcelpal</a>
+        <a className="brand" href="#top">Movva</a>
         <div className="nav-actions">
           <a className="support-link" href="#support">Support</a>
           <button className="btn btn-primary" onClick={onOpenWaitlist}>Get Started</button>
@@ -142,7 +142,7 @@ function Header({ onOpenMenu, onOpenWaitlist }) {
             <span className="hero-pill">Real-time delivery across Nigeria</span>
             <h1>Fast. Secure. Real-Time Delivery, Anytime.</h1>
             <p>
-              ParcelPal connects you with nearby riders for quick, real-time deliveries
+              Movva connects you with nearby riders for quick, real-time deliveries
               with tracking, secure payments, and in-app coordination.
             </p>
             <div className="waitlist-inline">
@@ -177,9 +177,9 @@ function OfferSection({ onOpenWaitlist }) {
       </div>
       <div className="offer-grid">
         <div className="offer-media">
-          <img src={asset("Frame 2147227048.png")} alt="Parcelpal rider delivery preview" />
+          <img src={asset("Frame 2147227048.png")} alt="Movva rider delivery preview" />
         </div>
-        <ul className="feature-list" aria-label="Parcelpal features">
+        <ul className="feature-list" aria-label="Movva features">
           {offers.map((offer) => <li key={offer}>{offer}</li>)}
         </ul>
         {featureCards.map((card) => (
@@ -195,7 +195,7 @@ function OfferSection({ onOpenWaitlist }) {
         ))}
       </div>
       <div className="cta-strip">
-        <p><strong>Ready to deliver smarter?</strong> Join the ParcelPal community.</p>
+        <p><strong>Ready to deliver smarter?</strong> Join the Movva community.</p>
         <div>
           <a className="btn btn-dark" href="#download">Download App</a>
           <button className="btn btn-outline" onClick={onOpenWaitlist}>Book a Rider</button>
@@ -208,13 +208,13 @@ function OfferSection({ onOpenWaitlist }) {
 function StepsSection() {
   return (
     <section className="section steps-section" id="steps">
-      <h2>Easy Steps to Download and Use the Parcel Pal App</h2>
+      <h2>Easy Steps to Download and Use the Movva App</h2>
       <div className="steps-layout">
         <div className="phone-frame">
           <AssetImage
             src={iconFiles.phoneSteps}
-            alt="Parcelpal app interface"
-            fallback={<img src={asset("Frame 2147227013-1.png")} alt="Parcelpal app interface" />}
+            alt="Movva app interface"
+            fallback={<img src={asset("Frame 2147227013-1.png")} alt="Movva app interface" />}
           />
         </div>
         <ol className="steps-list">
@@ -266,9 +266,9 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
 
   return (
     <div className="menu-overlay">
-      <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Parcelpal menu">
+      <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Movva menu">
         <div className="menu-top">
-          <a className="brand" href="#top" onClick={closeAfterClick}>Parcelpal</a>
+          <a className="brand" href="#top" onClick={closeAfterClick}>Movva</a>
           <div>
             <a className="support-link desktop-only" href="#support" onClick={closeAfterClick}>Support</a>
             <button className="btn btn-primary desktop-only" onClick={onOpenWaitlist}>Get Started</button>
@@ -278,7 +278,7 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
         <div className="menu-content">
           <nav className="menu-links" aria-label="Menu links">
             <a href="#top" onClick={closeAfterClick}>Home</a>
-            <a href="#offer" onClick={closeAfterClick}>About Parcel pal</a>
+            <a href="#offer" onClick={closeAfterClick}>About Movva</a>
             <a href="#support" onClick={closeAfterClick}>Contact us</a>
             <a href="#download" onClick={closeAfterClick}>FAQ</a>
             <a href="#download" onClick={closeAfterClick}>Terms & Conditions</a>
@@ -286,8 +286,8 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
           </nav>
           <div className="menu-badges"><StoreBadges /></div>
           <div className="menu-options">
-            <article><div><h3>Join Parcel pal today</h3><p>Join the Parcel Pal community and experience seamless delivery management across Nigeria.</p></div></article>
-            <article><div><h3>Become a Parcel Pal driver</h3><p>Unlock your earning potential with Parcel Pal and grow with Nigeria’s trusted delivery platform.</p></div></article>
+            <article><div><h3>Join Movva today</h3><p>Join the Movva community and experience seamless delivery management across Nigeria.</p></div></article>
+            <article><div><h3>Become a Movva driver</h3><p>Unlock your earning potential with Movva and grow with Nigeria’s trusted delivery platform.</p></div></article>
             <article><div><h3>Smart Business Accounts for Bulk Deliveries</h3><p>Simplify your logistics with business accounts for bulk delivery, tracking, and seamless payments.</p></div></article>
           </div>
         </div>
@@ -308,7 +308,7 @@ function WaitlistModal({ open, onClose, onSubmit, message, messageType, isSubmit
         </div>
         <form className="waitlist-form" onSubmit={onSubmit}>
           <h3 id="waitlist-title">Join the waiting list</h3>
-          <p>Tell us how you want to use Parcelpal and we’ll notify you when early access opens.</p>
+          <p>Tell us how you want to use Movva and we’ll notify you when early access opens.</p>
           <label>
             Full name
             <input name="name" type="text" placeholder="Your name" required />
@@ -347,8 +347,8 @@ export default function App() {
   const currentYear = new Date().getFullYear();
 
   const saveWaitlistEntry = (entry) => {
-    const current = JSON.parse(localStorage.getItem("parcelpalWaitlist") || "[]");
-    localStorage.setItem("parcelpalWaitlist", JSON.stringify([...current, entry]));
+    const current = JSON.parse(localStorage.getItem("movvaWaitlist") || "[]");
+    localStorage.setItem("movvaWaitlist", JSON.stringify([...current, entry]));
   };
 
   const handleWaitlistSubmit = async (event) => {
@@ -425,13 +425,13 @@ export default function App() {
       <footer className="footer" id="support">
         <div>
           <p className="footer-label">About</p>
-          <h2>Parcel pal</h2>
-          <p>Parcel Pal delivers fast, secure, and affordable courier services across Nigeria.</p>
+          <h2>Movva</h2>
+          <p>Movva delivers fast, secure, and affordable courier services across Nigeria.</p>
           <SocialLinks />
         </div>
         <div>
-          <p className="footer-label">Parcel Pal</p>
-          <a href="#offer">Join Parcel pal today</a>
+          <p className="footer-label">Movva</p>
+          <a href="#offer">Join Movva today</a>
           <a href="#top">About us</a>
           <a href="#support">Contact us</a>
           <a href="#download">Terms and Conditions</a>
