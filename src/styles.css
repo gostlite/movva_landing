@@ -41,6 +41,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -802,6 +807,10 @@ button {
   min-height: 24px;
   color: #08702a !important;
   font-weight: 700;
+}
+
+.form-message.error {
+  color: #b42318 !important;
 }
 
 @media (max-width: 980px) {

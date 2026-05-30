@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 
 const asset = (name) => `/assets/${name}`;
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "");
+const waitlistEndpoint = apiBaseUrl ? `${apiBaseUrl}/waiting-list` : "";
 
 const offers = [
   "Find nearby riders instantly",
@@ -294,7 +296,7 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
   );
 }
 
-function WaitlistModal({ open, onClose, onSubmit, message }) {
+function WaitlistModal({ open, onClose, onSubmit, message, messageType, isSubmitting }) {
   if (!open) return null;
 
   return (
@@ -324,8 +326,12 @@ function WaitlistModal({ open, onClose, onSubmit, message }) {
               <option>Rider/Driver</option>
             </select>
           </label>
-          <button className="btn btn-primary" type="submit">Join Waitlist</button>
-          <p className="form-message">{message}</p>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Joining..." : "Join Waitlist"}
+          </button>
+          <p className={`form-message ${messageType === "error" ? "error" : ""}`} aria-live="polite">
+            {message}
+          </p>
         </form>
       </div>
     </div>
@@ -336,6 +342,8 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [formMessage, setFormMessage] = useState("");
+  const [formMessageType, setFormMessageType] = useState("success");
+  const [isSubmittingWaitlist, setIsSubmittingWaitlist] = useState(false);
   const currentYear = new Date().getFullYear();
 
   const saveWaitlistEntry = (entry) => {
@@ -343,8 +351,9 @@ export default function App() {
     localStorage.setItem("parcelpalWaitlist", JSON.stringify([...current, entry]));
   };
 
-  const handleWaitlistSubmit = (event) => {
+  const handleWaitlistSubmit = async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
     const formData = new FormData(event.currentTarget);
     const entry = {
       name: formData.get("name") || "",
@@ -353,14 +362,45 @@ export default function App() {
       joinedAt: new Date().toISOString(),
     };
 
-    saveWaitlistEntry(entry);
-    event.currentTarget.reset();
-    setFormMessage("You are on the list. We’ll be in touch soon.");
-    setWaitlistOpen(true);
+    if (!waitlistEndpoint) {
+      setFormMessageType("error");
+      setFormMessage("Waitlist service is not configured yet.");
+      return;
+    }
+
+    setIsSubmittingWaitlist(true);
+    setFormMessage("");
+
+    try {
+      const response = await fetch(waitlistEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(entry),
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => null);
+        throw new Error(errorBody?.message || "Unable to join the waitlist right now.");
+      }
+
+      saveWaitlistEntry(entry);
+      form.reset();
+      setFormMessageType("success");
+      setFormMessage("You are on the list. We’ll be in touch soon.");
+      setWaitlistOpen(true);
+    } catch (error) {
+      setFormMessageType("error");
+      setFormMessage(error.message || "Unable to join the waitlist right now.");
+    } finally {
+      setIsSubmittingWaitlist(false);
+    }
   };
 
   const openWaitlist = () => {
     setFormMessage("");
+    setFormMessageType("success");
     setWaitlistOpen(true);
     setMenuOpen(false);
   };
@@ -399,11 +439,11 @@ export default function App() {
         </div>
         <div>
           <p className="footer-label">Contact</p>
-          <p>Email: support@parcelpal.ng</p>
-          <p>Tel- Phone: xxxxxxxxx</p>
+          <p>Email: jjohnAdeleke91@gmail.com</p>
+          <p>Tel- Phone: +234 907 947 2099</p>
           <p>Location: Lagos, Nigeria</p>
         </div>
-        <small>© {currentYear} Parcel Pal. All rights reserved.</small>
+        <small>© {currentYear} Quantiv Digital. All rights reserved.</small>
       </footer>
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} onOpenWaitlist={openWaitlist} />
       <WaitlistModal
@@ -411,6 +451,8 @@ export default function App() {
         onClose={() => setWaitlistOpen(false)}
         onSubmit={handleWaitlistSubmit}
         message={formMessage}
+        messageType={formMessageType}
+        isSubmitting={isSubmittingWaitlist}
       />
     </>
   );
