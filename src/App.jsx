@@ -71,6 +71,16 @@ const socialLinks = [
   ["x_twitter.png", "X"],
 ];
 
+const heroScreens = [
+  ["movva-rider-app.jpg", "Movva rider app"],
+  ["movva-user-app.jpg", "Movva user app"],
+];
+
+const appScreenshots = [
+  ["Screenshot_20260603_193234 (1).jpg", "Movva app delivery screenshot"],
+  ["Screenshot_20260603_193313 (1).jpg", "Movva app tracking screenshot"],
+];
+
 function AssetImage({ src, alt, className, fallback }) {
   const [failed, setFailed] = useState(false);
 
@@ -84,6 +94,14 @@ function AssetImage({ src, alt, className, fallback }) {
       alt={alt}
       onError={() => setFailed(true)}
     />
+  );
+}
+
+function PhoneShot({ src, alt, className = "" }) {
+  return (
+    <div className={`phone-shot ${className}`}>
+      <AssetImage src={src} alt={alt} />
+    </div>
   );
 }
 
@@ -161,7 +179,14 @@ function Header({ onOpenMenu, onOpenWaitlist }) {
             <StoreBadges />
           </div>
           <div className="hero-visual" aria-hidden="true">
-            <img src={asset("Frame 2147227049.png")} alt="" />
+            {heroScreens.map(([src, alt], index) => (
+              <PhoneShot
+                key={src}
+                src={src}
+                alt={alt}
+                className={index === 0 ? "phone-shot-rider" : "phone-shot-user"}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -228,6 +253,26 @@ function StepsSection() {
             </li>
           ))}
         </ol>
+      </div>
+    </section>
+  );
+}
+
+function AppPreviewSection() {
+  return (
+    <section className="section app-preview-section" aria-label="Movva app screenshots">
+      <div className="app-preview-copy">
+        <span className="hero-pill">Built for every delivery</span>
+        <h2>Manage bookings, riders, and delivery updates from one app.</h2>
+        <p>
+          Movva gives customers and riders the screens they need to coordinate
+          pickups, track progress, and keep each delivery moving.
+        </p>
+      </div>
+      <div className="app-preview-grid">
+        {appScreenshots.map(([src, alt], index) => (
+          <PhoneShot key={src} src={src} alt={alt} className={index === 1 ? "is-lowered" : ""} />
+        ))}
       </div>
     </section>
   );
@@ -304,7 +349,14 @@ function WaitlistModal({ open, onClose, onSubmit, message, messageType, isSubmit
       <div className="waitlist-card" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
         <button className="close-btn" type="button" onClick={onClose} aria-label="Close waitlist">×</button>
         <div className="waitlist-hero">
-          <img src={asset("Frame 2147227049.png")} alt="" />
+          {heroScreens.map(([src, alt], index) => (
+            <PhoneShot
+              key={src}
+              src={src}
+              alt={alt}
+              className={index === 0 ? "phone-shot-rider" : "phone-shot-user"}
+            />
+          ))}
         </div>
         <form className="waitlist-form" onSubmit={onSubmit}>
           <h3 id="waitlist-title">Join the waiting list</h3>
@@ -414,6 +466,7 @@ export default function App() {
         <OfferSection onOpenWaitlist={openWaitlist} />
         <StepsSection />
         <Testimonials />
+        <AppPreviewSection />
         <section className="download-card" id="download">
           <h2>Download Our App Today!</h2>
           <p>Get trusted local riders, live tracking, secure checkout, and stress-free deliveries from one smart app.</p>
