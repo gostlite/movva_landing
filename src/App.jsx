@@ -48,11 +48,16 @@ const steps = [
 ];
 
 const testimonials = [
-  ["Jerome Bell", "Movva has made dispatch easier for my small business."],
-  ["Kristin Watson", "I love the secure payments and how fast the riders respond."],
-  ["Annette Black", "Real-time tracking keeps every order visible from pickup to drop-off."],
-  ["Annette Black", "We run multiple store locations and Movva keeps everything in sync."],
+  ["Lagos Business Owner", "Movva has made dispatch easier for my small business. No more calling riders one by one."],
+  ["Ikeja Shop Owner", "I love the secure payments and how fast the riders respond. My customers are happier."],
+  ["Abuja Entrepreneur", "Real-time tracking keeps every order visible from pickup to drop-off. Finally, transparency."],
+  ["Kano SME Founder", "We run multiple store locations and Movva keeps everything in sync. Saves us hours weekly."],
 ];
+
+const storeLinks = {
+  googlePlay: "https://play.google.com/store/apps/details?id=com.movva.app",
+  appStore: "https://apps.apple.com/app/id1234567890",
+};
 
 const iconFiles = {
   googlePlay: "google-play-badge.png",
@@ -64,11 +69,11 @@ const iconFiles = {
 };
 
 const socialLinks = [
-  ["facebook-color-svgrepo-com 1.png", "Facebook"],
-  ["linkedin-color-svgrepo-com 1.png", "LinkedIn"],
-  ["youtube-color-svgrepo-com 1.png", "YouTube"],
-  ["gmail-icon-logo-svgrepo-com 1.png", "Email"],
-  ["x_twitter.png", "X"],
+  ["https://facebook.com/movva", "facebook-color-svgrepo-com 1.png", "Facebook"],
+  ["https://linkedin.com/company/movva", "linkedin-color-svgrepo-com 1.png", "LinkedIn"],
+  ["https://youtube.com/@movva", "youtube-color-svgrepo-com 1.png", "YouTube"],
+  ["mailto:jjohnAdeleke91@gmail.com", "gmail-icon-logo-svgrepo-com 1.png", "Email"],
+  ["https://x.com/movva", "x_twitter.png", "X"],
 ];
 
 const heroScreens = [
@@ -108,7 +113,7 @@ function PhoneShot({ src, alt, className = "" }) {
 function StoreBadges({ center = false }) {
   return (
     <div className={`store-row ${center ? "center" : ""}`} aria-label="Download links">
-      <a href="#download" className="store-link" aria-label="Get it on Google Play">
+      <a href={storeLinks.googlePlay} className="store-link" aria-label="Get it on Google Play" target="_blank" rel="noopener noreferrer">
         <AssetImage
           src={iconFiles.googlePlay}
           alt="Get it on Google Play"
@@ -116,7 +121,7 @@ function StoreBadges({ center = false }) {
           fallback={<span className="store-badge">Get it on<strong>Google Play</strong></span>}
         />
       </a>
-      <a href="#download" className="store-link" aria-label="Download on the App Store">
+      <a href={storeLinks.appStore} className="store-link" aria-label="Download on the App Store" target="_blank" rel="noopener noreferrer">
         <AssetImage
           src={iconFiles.appStore}
           alt="Download on the App Store"
@@ -131,8 +136,8 @@ function StoreBadges({ center = false }) {
 function SocialLinks() {
   return (
     <div className="social-links" aria-label="Social links">
-      {socialLinks.map(([file, label]) => (
-        <a href="#support" aria-label={label} key={label}>
+      {socialLinks.map(([url, file, label]) => (
+        <a href={url} aria-label={label} key={label} target="_blank" rel="noopener noreferrer">
           <AssetImage src={file} alt="" className="social-icon" />
         </a>
       ))}
@@ -170,8 +175,6 @@ function Header({ onOpenMenu, onOpenWaitlist }) {
                 name="email"
                 type="email"
                 placeholder="Join the waiting list"
-                readOnly
-                onFocus={onOpenWaitlist}
                 onClick={onOpenWaitlist}
               />
               <button className="btn btn-primary" type="button" onClick={onOpenWaitlist}>Join Waitlist</button>
@@ -222,8 +225,8 @@ function OfferSection({ onOpenWaitlist }) {
       <div className="cta-strip">
         <p><strong>Ready to deliver smarter?</strong> Join the Movva community.</p>
         <div>
-          <a className="btn btn-dark" href="#download">Download App</a>
-          <button className="btn btn-outline" onClick={onOpenWaitlist}>Book a Rider</button>
+          <a className="btn btn-dark" href={storeLinks.googlePlay} target="_blank" rel="noopener noreferrer">Download App</a>
+          <button className="btn btn-outline" onClick={openWaitlist}>Join Waitlist</button>
         </div>
       </div>
     </section>
