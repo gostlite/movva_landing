@@ -110,25 +110,31 @@ function PhoneShot({ src, alt, className = "" }) {
   );
 }
 
-function StoreBadges({ center = false }) {
+function StoreBadges({ center = false, onOpenWaitlist }) {
+  const handleStoreClick = () => {
+    onOpenWaitlist?.("store");
+  };
+
   return (
     <div className={`store-row ${center ? "center" : ""}`} aria-label="Download links">
-      <a href={storeLinks.googlePlay} className="store-link" aria-label="Get it on Google Play" target="_blank" rel="noopener noreferrer">
+      <button type="button" className="store-link coming-soon" aria-label="Google Play coming soon" onClick={handleStoreClick}>
         <AssetImage
           src={iconFiles.googlePlay}
           alt="Get it on Google Play"
           className="store-image"
           fallback={<span className="store-badge">Get it on<strong>Google Play</strong></span>}
         />
-      </a>
-      <a href={storeLinks.appStore} className="store-link" aria-label="Download on the App Store" target="_blank" rel="noopener noreferrer">
+        <span className="coming-soon-tag" aria-hidden="true">Coming soon</span>
+      </button>
+      <button type="button" className="store-link coming-soon" aria-label="App Store coming soon" onClick={handleStoreClick}>
         <AssetImage
           src={iconFiles.appStore}
           alt="Download on the App Store"
           className="store-image"
           fallback={<span className="store-badge">Download on the<strong>App Store</strong></span>}
         />
-      </a>
+        <span className="coming-soon-tag" aria-hidden="true">Coming soon</span>
+      </button>
     </div>
   );
 }
@@ -179,7 +185,7 @@ function Header({ onOpenMenu, onOpenWaitlist }) {
               />
               <button className="btn btn-primary" type="button" onClick={onOpenWaitlist}>Join Waitlist</button>
             </div>
-            <StoreBadges />
+            <StoreBadges onOpenWaitlist={onOpenWaitlist} />
           </div>
           <div className="hero-visual" aria-hidden="true">
             {heroScreens.map(([src, alt], index) => (
@@ -225,8 +231,8 @@ function OfferSection({ onOpenWaitlist }) {
       <div className="cta-strip">
         <p><strong>Ready to deliver smarter?</strong> Join the Movva community.</p>
         <div>
-          <a className="btn btn-dark" href={storeLinks.googlePlay} target="_blank" rel="noopener noreferrer">Download App</a>
-          <button className="btn btn-outline" onClick={openWaitlist}>Join Waitlist</button>
+          <button className="btn btn-dark" type="button" onClick={() => onOpenWaitlist("store")}>Download App</button>
+          <button className="btn btn-outline" type="button" onClick={onOpenWaitlist}>Join Waitlist</button>
         </div>
       </div>
     </section>
@@ -332,7 +338,7 @@ function MenuOverlay({ open, onClose, onOpenWaitlist }) {
             <a href="#download" onClick={closeAfterClick}>Terms & Conditions</a>
             <a href="#download" onClick={closeAfterClick}>Privacy Policy</a>
           </nav>
-          <div className="menu-badges"><StoreBadges /></div>
+          <div className="menu-badges"><StoreBadges onOpenWaitlist={onOpenWaitlist} /></div>
           <div className="menu-options">
             <article><div><h3>Join Movva today</h3><p>Join the Movva community and experience seamless delivery management across Nigeria.</p></div></article>
             <article><div><h3>Become a Movva driver</h3><p>Unlock your earning potential with Movva and grow with Nigeria’s trusted delivery platform.</p></div></article>
@@ -371,6 +377,10 @@ function WaitlistModal({ open, onClose, onSubmit, message, messageType, isSubmit
           <label>
             Email address
             <input name="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label>
+            Phone number <span>Optional</span>
+            <input name="phone" type="tel" placeholder="+234 800 000 0000" />
           </label>
           <label>
             I am joining as
@@ -413,6 +423,7 @@ export default function App() {
     const entry = {
       name: String(formData.get("name") || ""),
       email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
       userType: String(formData.get("userType") || ""),
     };
 
@@ -452,8 +463,8 @@ export default function App() {
     }
   };
 
-  const openWaitlist = () => {
-    setFormMessage("");
+  const openWaitlist = (source) => {
+    setFormMessage(source === "store" ? "Coming soon. Please fill the waiting list to get notification." : "");
     setFormMessageType("success");
     setWaitlistOpen(true);
     setMenuOpen(false);
@@ -473,7 +484,7 @@ export default function App() {
         <section className="download-card" id="download">
           <h2>Download Our App Today!</h2>
           <p>Get trusted local riders, live tracking, secure checkout, and stress-free deliveries from one smart app.</p>
-          <StoreBadges center />
+          <StoreBadges center onOpenWaitlist={openWaitlist} />
           <button className="btn btn-primary" onClick={openWaitlist}>Join Waiting List</button>
         </section>
       </main>

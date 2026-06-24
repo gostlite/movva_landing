@@ -213,9 +213,24 @@ button:disabled {
 }
 
 .store-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.store-link.coming-soon {
+  cursor: pointer;
+}
+
+.store-link.coming-soon:focus-visible {
+  outline: 3px solid rgba(255, 173, 36, 0.52);
+  outline-offset: 4px;
 }
 
 .store-image {
@@ -242,6 +257,25 @@ button:disabled {
 .store-badge strong {
   display: block;
   font-size: 1.05rem;
+}
+
+.coming-soon-tag {
+  position: absolute;
+  right: -10px;
+  bottom: -9px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 9px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--orange);
+  box-shadow: 0 8px 18px rgba(7, 22, 45, 0.16);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .section {
@@ -782,6 +816,12 @@ button:disabled {
   gap: 8px;
   color: var(--blue);
   font-weight: 700;
+}
+
+.waitlist-form label span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .waitlist-form input,
